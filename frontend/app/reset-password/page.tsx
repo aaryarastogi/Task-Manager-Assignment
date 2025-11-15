@@ -133,9 +133,6 @@ export default function ResetPasswordPage() {
               Login here
             </Link>
           </p>
-          <p className="text-center text-xs text-gray-500">
-            Note: This is a development feature. In production, password reset would require email verification.
-          </p>
         </div>
       </div>
     </div>

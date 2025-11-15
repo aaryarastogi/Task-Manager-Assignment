@@ -8,7 +8,6 @@ import { AuthRequest } from '../middleware/auth';
 
 const router = express.Router();
 
-// Register
 router.post(
   '/register',
   [
@@ -25,7 +24,6 @@ router.post(
 
       const { email, password, name } = req.body;
 
-      // Check if user already exists
       const existingUser = await prisma.user.findUnique({
         where: { email },
       });
@@ -34,10 +32,8 @@ router.post(
         throw new AppError('User with this email already exists', 400);
       }
 
-      // Hash password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Create user
       const user = await prisma.user.create({
         data: {
           email,
@@ -46,14 +42,12 @@ router.post(
         },
       });
 
-      // Generate tokens
       const tokenPayload = { userId: user.id, email: user.email };
       const accessToken = generateAccessToken(tokenPayload);
       const refreshToken = generateRefreshToken(tokenPayload);
 
-      // Store refresh token
       const expiresAt = new Date();
-      expiresAt.setDate(expiresAt.getDate() + 7); // 7 days
+      expiresAt.setDate(expiresAt.getDate() + 7);
 
       await prisma.refreshToken.create({
         data: {
@@ -79,7 +73,6 @@ router.post(
   }
 );
 
-// Login
 router.post(
   '/login',
   [
@@ -95,7 +88,6 @@ router.post(
 
       const { email, password } = req.body;
 
-      // Find user
       const user = await prisma.user.findUnique({
         where: { email },
       });
@@ -105,7 +97,6 @@ router.post(
         throw new AppError('Invalid email or password', 401);
       }
 
-      // Verify password
       const isValidPassword = await bcrypt.compare(password, user.password);
 
       if (!isValidPassword) {
@@ -115,14 +106,12 @@ router.post(
 
       console.log(`Login successful for user: ${user.email}`);
 
-      // Generate tokens
       const tokenPayload = { userId: user.id, email: user.email };
       const accessToken = generateAccessToken(tokenPayload);
       const refreshToken = generateRefreshToken(tokenPayload);
 
-      // Store refresh token
       const expiresAt = new Date();
-      expiresAt.setDate(expiresAt.getDate() + 7); // 7 days
+      expiresAt.setDate(expiresAt.getDate() + 7);
 
       await prisma.refreshToken.create({
         data: {
@@ -148,7 +137,6 @@ router.post(
   }
 );
 
-// Refresh token
 router.post('/refresh', async (req: Request, res: Response) => {
   try {
     const { refreshToken } = req.body;
@@ -157,10 +145,8 @@ router.post('/refresh', async (req: Request, res: Response) => {
       throw new AppError('Refresh token is required', 400);
     }
 
-    // Verify refresh token
     const payload = verifyRefreshToken(refreshToken);
 
-    // Check if token exists in database
     const storedToken = await prisma.refreshToken.findUnique({
       where: { token: refreshToken },
       include: { user: true },
@@ -170,7 +156,6 @@ router.post('/refresh', async (req: Request, res: Response) => {
       throw new AppError('Invalid or expired refresh token', 401);
     }
 
-    // Generate new access token
     const tokenPayload = { userId: payload.userId, email: payload.email };
     const accessToken = generateAccessToken(tokenPayload);
 
@@ -182,13 +167,11 @@ router.post('/refresh', async (req: Request, res: Response) => {
   }
 });
 
-// Logout
 router.post('/logout', async (req: Request, res: Response) => {
   try {
     const { refreshToken } = req.body;
 
     if (refreshToken) {
-      // Delete refresh token from database
       await prisma.refreshToken.deleteMany({
         where: { token: refreshToken },
       });
@@ -200,8 +183,6 @@ router.post('/logout', async (req: Request, res: Response) => {
   }
 });
 
-// Reset password (simple version - for development only)
-// In production, this should require email verification
 router.post(
   '/reset-password',
   [
@@ -217,7 +198,6 @@ router.post(
 
       const { email, newPassword } = req.body;
 
-      // Find user
       const user = await prisma.user.findUnique({
         where: { email },
       });
@@ -226,16 +206,13 @@ router.post(
         throw new AppError('User not found', 404);
       }
 
-      // Hash new password
       const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-      // Update password
       await prisma.user.update({
         where: { id: user.id },
         data: { password: hashedPassword },
       });
 
-      // Delete all refresh tokens for this user
       await prisma.refreshToken.deleteMany({
         where: { userId: user.id },
       });

@@ -29,14 +29,13 @@ export default function DashboardPage() {
     loadTasks();
   }, [page, statusFilter, activeSearchQuery]);
 
-  // Debounced search - automatically search as user types
   useEffect(() => {
     if (!user) return;
     
     const debounceTimer = setTimeout(() => {
       setActiveSearchQuery(searchQuery.trim());
-      setPage(1); // Reset to first page when search changes
-    }, 500); // Wait 500ms after user stops typing
+      setPage(1);
+    }, 500);
 
     return () => clearTimeout(debounceTimer);
   }, [searchQuery, user]);
@@ -116,7 +115,7 @@ export default function DashboardPage() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setPage(1);
-    setActiveSearchQuery(searchQuery.trim()); // Immediately apply search when button is clicked
+    setActiveSearchQuery(searchQuery.trim());
   };
 
   const handleClearSearch = () => {
@@ -139,7 +138,6 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* Header */}
         <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl border border-white/20 p-6 mb-6 transform hover:scale-[1.01] transition-all duration-300">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
@@ -157,7 +155,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Filters and Search */}
         <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl border border-white/20 p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <form onSubmit={handleSearch} className="flex-1 flex gap-3">
@@ -223,7 +220,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Task Form Modal */}
         {(showForm || editingTask) && (
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
             <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto transform animate-slideUp border border-white/20">
@@ -242,7 +238,6 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Tasks Grid */}
         {loading ? (
           <div className="flex justify-center items-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
@@ -282,7 +277,6 @@ export default function DashboardPage() {
               ))}
             </div>
 
-            {/* Pagination */}
             {totalPages > 1 && (
               <div className="flex justify-center items-center gap-3 mt-8">
                 <button

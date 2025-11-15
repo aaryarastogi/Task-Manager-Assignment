@@ -14,7 +14,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated()) {
       router.push('/dashboard');
@@ -24,7 +23,6 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Trim email and password to remove any accidental whitespace
     const trimmedEmail = email.trim();
     const trimmedPassword = password.trim();
     
@@ -47,7 +45,6 @@ export default function LoginPage() {
       let errorMessage = 'Login failed';
       
       if (error.response) {
-        // Server responded with error
         const serverError = error.response.data?.error || error.response.data?.message;
         if (serverError === 'Invalid email or password') {
           errorMessage = 'Invalid email or password. Please check your credentials and try again.';
@@ -55,10 +52,8 @@ export default function LoginPage() {
           errorMessage = serverError || `Server error: ${error.response.status}`;
         }
       } else if (error.request) {
-        // Request was made but no response received
         errorMessage = 'Unable to connect to server. Please check if the backend is running on http://localhost:3001';
       } else {
-        // Something else happened
         errorMessage = error.message || 'An unexpected error occurred';
       }
       

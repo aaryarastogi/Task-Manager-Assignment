@@ -9,7 +9,6 @@ const api = axios.create({
   },
 });
 
-// Request interceptor to add access token
 api.interceptors.request.use(
   (config) => {
     if (typeof window !== 'undefined') {
@@ -25,7 +24,6 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle token refresh
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {

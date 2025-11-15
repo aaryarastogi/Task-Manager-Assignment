@@ -40,7 +40,6 @@ export default function TaskForm({ task, onSubmit, onCancel }: TaskFormProps) {
         setStatus('PENDING');
       }
     } catch (error) {
-      // Error handling is done in parent component
     } finally {
       setLoading(false);
     }

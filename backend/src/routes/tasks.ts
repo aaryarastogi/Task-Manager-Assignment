@@ -6,10 +6,8 @@ import { authenticate, AuthRequest } from '../middleware/auth';
 
 const router = express.Router();
 
-// All task routes require authentication
 router.use(authenticate);
 
-// Get all tasks with pagination, filtering, and searching
 router.get(
   '/',
   [
@@ -40,8 +38,6 @@ router.get(
       }
 
       if (search && search.trim()) {
-        // SQLite search - using contains for partial match
-        // Note: SQLite's LIKE is case-insensitive by default for ASCII characters
         where.title = {
           contains: search.trim(),
         };
@@ -72,7 +68,6 @@ router.get(
   }
 );
 
-// Get single task
 router.get('/:id', async (req: AuthRequest, res: Response) => {
   try {
     const task = await prisma.task.findFirst({
@@ -92,7 +87,6 @@ router.get('/:id', async (req: AuthRequest, res: Response) => {
   }
 });
 
-// Create task
 router.post(
   '/',
   [
@@ -125,7 +119,6 @@ router.post(
   }
 );
 
-// Update task
 router.patch(
   '/:id',
   [
@@ -140,7 +133,6 @@ router.patch(
         return res.status(400).json({ errors: errors.array() });
       }
 
-      // Check if task exists and belongs to user
       const existingTask = await prisma.task.findFirst({
         where: {
           id: req.params.id,
@@ -169,10 +161,8 @@ router.patch(
   }
 );
 
-// Delete task
 router.delete('/:id', async (req: AuthRequest, res: Response) => {
   try {
-    // Check if task exists and belongs to user
     const task = await prisma.task.findFirst({
       where: {
         id: req.params.id,
@@ -194,10 +184,8 @@ router.delete('/:id', async (req: AuthRequest, res: Response) => {
   }
 });
 
-// Toggle task status
 router.patch('/:id/toggle', async (req: AuthRequest, res: Response) => {
   try {
-    // Check if task exists and belongs to user
     const task = await prisma.task.findFirst({
       where: {
         id: req.params.id,
@@ -209,7 +197,6 @@ router.patch('/:id/toggle', async (req: AuthRequest, res: Response) => {
       throw new AppError('Task not found', 404);
     }
 
-    // Toggle status: PENDING -> IN_PROGRESS -> COMPLETED -> PENDING
     let newStatus: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
     if (task.status === 'PENDING') {
       newStatus = 'IN_PROGRESS';

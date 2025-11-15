@@ -35,9 +35,8 @@ export const login = async (email: string, password: string): Promise<AuthRespon
     console.error('Login API error:', error);
     console.error('Error response:', error.response?.data);
     console.error('Error status:', error.response?.status);
-    // Re-throw with more context
     if (error.response) {
-      throw error; // Axios error with response
+      throw error;
     } else if (error.request) {
       console.error('No response received:', error.request);
       throw new Error('Network error: Could not reach the server');
