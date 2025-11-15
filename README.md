@@ -22,28 +22,6 @@ A complete full-stack Task Management System built with Node.js, TypeScript, Pri
 - ✅ Toast notifications for user feedback
 - ✅ Modern, responsive UI with Tailwind CSS
 
-## Project Structure
-
-```
-TaskManagerAssignment/
-├── backend/          # Node.js + TypeScript + Prisma API
-│   ├── src/
-│   │   ├── routes/   # API routes
-│   │   ├── middleware/ # Auth middleware
-│   │   └── utils/    # Utilities
-│   └── prisma/       # Prisma schema
-└── frontend/         # Next.js + TypeScript frontend
-    ├── app/          # Next.js App Router pages
-    ├── components/   # React components
-    └── lib/          # API client and utilities
-```
-
-## Prerequisites
-
-- Node.js (v18 or higher)
-- PostgreSQL database
-- npm or yarn
-
 ## Setup Instructions
 
 ### Backend Setup
@@ -58,27 +36,7 @@ cd backend
 npm install
 ```
 
-3. Create a `.env` file in the backend directory:
-```env
-DATABASE_URL="postgresql://user:password@localhost:5432/taskmanager?schema=public"
-JWT_ACCESS_SECRET="your-access-token-secret-key-change-this"
-JWT_REFRESH_SECRET="your-refresh-token-secret-key-change-this"
-JWT_ACCESS_EXPIRES_IN="15m"
-JWT_REFRESH_EXPIRES_IN="7d"
-PORT=3001
-```
-
-4. Generate Prisma Client:
-```bash
-npm run prisma:generate
-```
-
-5. Run database migrations:
-```bash
-npm run prisma:migrate
-```
-
-6. Start the development server:
+3. Start the development server:
 ```bash
 npm run dev
 ```
@@ -97,34 +55,12 @@ cd frontend
 npm install
 ```
 
-3. Create a `.env.local` file in the frontend directory:
-```env
-NEXT_PUBLIC_API_URL=http://localhost:3001
-```
-
-4. Start the development server:
+3. Start the development server:
 ```bash
 npm run dev
 ```
 
 The frontend will be running on `http://localhost:3000`
-
-## API Endpoints
-
-### Authentication
-- `POST /auth/register` - Register a new user
-- `POST /auth/login` - Login user
-- `POST /auth/refresh` - Refresh access token
-- `POST /auth/logout` - Logout user
-
-### Tasks
-- `GET /tasks` - Get all tasks (with pagination, filtering, searching)
-  - Query params: `page`, `limit`, `status`, `search`
-- `GET /tasks/:id` - Get a single task
-- `POST /tasks` - Create a new task
-- `PATCH /tasks/:id` - Update a task
-- `DELETE /tasks/:id` - Delete a task
-- `PATCH /tasks/:id/toggle` - Toggle task status
 
 ## Usage
 
